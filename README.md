@@ -1,5 +1,9 @@
 #HAUT.AI
 
+## About
+Haut.AI is an innovative SaaS product that automates the collection of high-quality skin data. We help skincare brands provide skin testing and build interactive product recommendations on e-commerce platforms.
+The service sends images to HaurAI for analysis.
+
 ## Documentation
 The Haut.Ai API Swagger can be found [here][apiswagger].
 
