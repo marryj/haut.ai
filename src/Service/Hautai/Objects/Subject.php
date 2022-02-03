@@ -1,7 +1,7 @@
 <?php
 namespace App\Service\Hautai\Objects;
 
-use App\Service\Hautai\RestHTTPClient;
+use \App\Service\Hautai\RestClientInterface;
 
 
 class Subject {
@@ -13,15 +13,16 @@ class Subject {
     const API_PATH_SUBJECT_DELETE = 'companies/%s/datasets/%s/subjects/delete/';
 
     /**
-     * @var RestHTTPClient
+     * @var RestClientInterface
      */
     private $restClient;
 
 
     /**
-     * RestClient constructor.
+     * Subject constructor.
+     * @param RestClientInterface $restClient
      */
-    public function __construct(RestHTTPClient $restClient)
+    public function __construct(RestClientInterface $restClient)
     {
         $this->restClient = $restClient;
     }

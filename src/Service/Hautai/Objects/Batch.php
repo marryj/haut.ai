@@ -1,7 +1,7 @@
 <?php
 namespace App\Service\Hautai\Objects;
 
-use App\Service\Hautai\RestHTTPClient;
+use App\Service\Hautai\RestClientInterface;
 
 
 class Batch {
@@ -13,15 +13,16 @@ class Batch {
     const API_PATH_BATCH_DELETE = 'companies/%s/datasets/%s/subjects/%s/batches/%s/';
 
     /**
-     * @var RestHTTPClient
+     * @var RestClientInterface
      */
     private $restClient;
 
 
     /**
-     * RestClient constructor.
+     * Batch constructor.
+     * @param RestClientInterface $restClient
      */
-    public function __construct(RestHTTPClient $restClient)
+    public function __construct(RestClientInterface $restClient)
     {
         $this->restClient = $restClient;
     }

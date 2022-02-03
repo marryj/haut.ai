@@ -207,7 +207,7 @@ class RestHTTPClient implements RestClientInterface {
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function getResponseArray(ResponseInterface $response)
+    public function getResponseArray(ResponseInterface $response): array
     {
         if ($response->isRequestSuccessful()) {
             return $response->toArray();
@@ -221,7 +221,7 @@ class RestHTTPClient implements RestClientInterface {
      * @return bool
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function isRequestSuccessful(ResponseInterface $response)
+    public function isRequestSuccessful(ResponseInterface $response): bool
     {
         if (Response::HTTP_OK == $response->getStatusCode()) {
             return true;
@@ -263,7 +263,7 @@ class RestHTTPClient implements RestClientInterface {
      * @throws ClientException
      * @return array|mixed
      */
-    public function getResult(ResponseInterface $response)
+    public function getResult(ResponseInterface $response): array
     {
         // Workaround for export methods getRouteAsGPX, getRouteAsTCX:
         if (is_string($response)) {
@@ -295,7 +295,7 @@ class RestHTTPClient implements RestClientInterface {
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function login()
+    public function login(): array
     {
         $response = $this->post(
             self::API_PATH_LOGIN,
@@ -319,7 +319,7 @@ class RestHTTPClient implements RestClientInterface {
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function refreshToken(string $refreshToken)
+    public function refreshToken(string $refreshToken): array
     {
         $response = $this->post(
             self::API_PATH_REFRESH_TOKEN,

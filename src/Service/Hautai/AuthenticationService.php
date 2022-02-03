@@ -16,6 +16,9 @@ class AuthenticationService {
      */
     private $cache;
 
+    /**
+     * @var string
+     */
     private $accessToken;
 
     public function __construct(RestClientInterface $restClient, FilesystemAdapter $cache)
@@ -30,7 +33,7 @@ class AuthenticationService {
      * @return mixed|string
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function authenticate()
+    public function authenticate(): string
     {
 //        $this->cache->delete('hautai.apiclient.access_token');
 
@@ -51,7 +54,7 @@ class AuthenticationService {
         return $this->accessToken;
     }
 
-    public function getAccessToken()
+    public function getAccessToken(): string
     {
         return $this->accessToken;
     }

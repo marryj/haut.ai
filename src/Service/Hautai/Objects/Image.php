@@ -1,7 +1,7 @@
 <?php
 namespace App\Service\Hautai\Objects;
 
-use App\Service\Hautai\RestHTTPClient;
+use App\Service\Hautai\RestClientInterface;
 
 
 class Image {
@@ -13,15 +13,16 @@ class Image {
     const API_PATH_IMAGE_RESULT_GET = 'companies/%s/datasets/%s/subjects/%s/batches/%s/images/%s/results/';
 
     /**
-     * @var RestHTTPClient
+     * @var RestClientInterface
      */
     private $restClient;
 
 
     /**
-     * RestClient constructor.
+     * Image constructor.
+     * @param RestClientInterface $restClient
      */
-    public function __construct(RestHTTPClient $restClient)
+    public function __construct(RestClientInterface $restClient)
     {
         $this->restClient = $restClient;
     }

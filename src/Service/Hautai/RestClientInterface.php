@@ -74,17 +74,25 @@ interface RestClientInterface {
     public function patch($uri, $query = array(), $data = array(), $headers = array());
 
     /**
+     * @param ResponseInterface $response
      * @return array
      */
-    public function getResponseArray(ResponseInterface $response);
+    public function getResponseArray(ResponseInterface $response): array;
 
     /**
      * @param $response
      * @return mixed
      */
-    public function isRequestSuccessful(ResponseInterface $response);
+    public function isRequestSuccessful(ResponseInterface $response): bool;
 
-    public function login();
+    /**
+     * @return array
+     */
+    public function login() :array;
 
-    public function refreshToken(string $refreshToken);
+    /**
+     * @param string $refreshToken
+     * @return array
+     */
+    public function refreshToken(string $refreshToken): array;
 }
