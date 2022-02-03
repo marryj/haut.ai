@@ -1,7 +1,8 @@
 <?php
 namespace App\Service\Hautai\Objects;
 
-use App\Service\Hautai\RestClientInterface;
+use App\Service\Hautai\Http\Response;
+use App\Service\Hautai\Http\RestClientInterface;
 
 
 class Batch {
@@ -54,13 +55,14 @@ class Batch {
             $this->restClient->setAccessTokenHeader($accessToken);
         }
 
+        /** @var Response $response */
         $response = $this->restClient->post(
             sprintf(self::API_PATH_BATCH_CREATE, $companyId, $datasetId, $subjectId),
             [],
             ['creation_time' => date('Y.m.d h:i:s')]
         );
 
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
     /**
@@ -78,9 +80,10 @@ class Batch {
             $this->restClient->setAccessTokenHeader($accessToken);
         }
 
+        /** @var Response $response */
         $response = $this->restClient->get(sprintf(self::API_PATH_BATCH_GET, $companyId, $datasetId, $subjectId));
 
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
     /**
@@ -94,11 +97,12 @@ class Batch {
      */
     public function delete(string $batchId, string $companyId, string $datasetId, string $subjectId)
     {
+        /** @var Response $response */
         $response = $this->restClient->delete(
             sprintf(self::API_PATH_BATCH_DELETE, $companyId, $datasetId, $subjectId, $batchId)
         );
 
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
 }

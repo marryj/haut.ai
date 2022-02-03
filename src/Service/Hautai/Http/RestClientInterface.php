@@ -1,10 +1,5 @@
 <?php
-namespace App\Service\Hautai;
-
-
-use Symfony\Component\HttpClient\Response\CurlResponse;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+namespace App\Service\Hautai\Http;
 
 interface RestClientInterface {
 
@@ -18,13 +13,10 @@ interface RestClientInterface {
      *
      * @param string $method HTTP Method
      * @param string $uri Fully qualified url
-     * @param string[] $params Query string parameters
+     * @param string[] $query Query string parameters
      * @param string[] $data POST body data
      * @param string[] $headers HTTP Headers
-     * @param string $username User for Authentication
-     * @param string $password Password for Authentication
      * @param int $timeout Timeout in seconds
-     * @return HttpClientInterface Response from the Haut.ai API
      */
     public function request($method, $uri, $query = array(), $data = array(), $headers = array());
 
@@ -33,7 +25,6 @@ interface RestClientInterface {
      * @param array $query
      * @param array $data
      * @param array $headers
-     * @return HttpClientInterface
      */
     public function get($uri, $query = array(), $data = array(), $headers = array());
 
@@ -42,7 +33,6 @@ interface RestClientInterface {
      * @param array $query
      * @param array $data
      * @param array $headers
-     * @return HttpClientInterface
      */
     public function post($uri, $query = array(), $data = array(), $headers = array());
 
@@ -51,7 +41,6 @@ interface RestClientInterface {
      * @param array $query
      * @param array $data
      * @param array $headers
-     * @return HttpClientInterface
      */
     public function delete($uri, $query = array(), $data = array(), $headers = array());
 
@@ -60,7 +49,6 @@ interface RestClientInterface {
      * @param array $query
      * @param array $data
      * @param array $headers
-     * @return HttpClientInterface
      */
     public function put($uri, $query = array(), $data = array(), $headers = array());
 
@@ -69,21 +57,8 @@ interface RestClientInterface {
      * @param array $query
      * @param array $data
      * @param array $headers
-     * @return HttpClientInterface
      */
     public function patch($uri, $query = array(), $data = array(), $headers = array());
-
-    /**
-     * @param ResponseInterface $response
-     * @return array
-     */
-    public function getResponseArray(ResponseInterface $response): array;
-
-    /**
-     * @param $response
-     * @return mixed
-     */
-    public function isRequestSuccessful(ResponseInterface $response): bool;
 
     /**
      * @return array
@@ -95,4 +70,5 @@ interface RestClientInterface {
      * @return array
      */
     public function refreshToken(string $refreshToken): array;
+
 }

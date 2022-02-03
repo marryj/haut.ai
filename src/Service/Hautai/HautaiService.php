@@ -7,7 +7,7 @@ use App\Service\Hautai\AuthenticationService as HautaiAuthenticationService;
 use App\Service\Hautai\Objects\Batch;
 use App\Service\Hautai\Objects\Image;
 use App\Service\Hautai\Objects\Subject;
-use App\Service\Hautai\RestHTTPClient as HautaiRestClient;
+use App\Service\Hautai\Http\RestHTTPClient as HautaiRestClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use App\Repository\UserHautAiRepository;
@@ -67,7 +67,7 @@ class HautaiService
 
     public function init()
     {
-        $authService  = new HautaiAuthenticationService(new RestHTTPClient(), new FilesystemAdapter());
+        $authService  = new HautaiAuthenticationService(new HautaiRestClient(), new FilesystemAdapter());
 
         try {
             $authService->authenticate();
@@ -248,7 +248,7 @@ class HautaiService
             return false;
         }
 
-        return $this->hautAiImage->getResult(
+        return $this->hautAiImage->getImageResult(
             $_SERVER['HAUT_AI_COMPANY_ID'],
             $_SERVER['HAUT_AI_DATASET_ID'],
             $userHautAi->subjectId,

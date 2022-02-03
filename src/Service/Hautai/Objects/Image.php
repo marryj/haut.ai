@@ -1,7 +1,8 @@
 <?php
 namespace App\Service\Hautai\Objects;
 
-use App\Service\Hautai\RestClientInterface;
+use App\Service\Hautai\Http\Response;
+use App\Service\Hautai\Http\RestClientInterface;
 
 
 class Image {
@@ -67,7 +68,8 @@ class Image {
         }
 
         /**
-         *  See side_id parameter below. To review such parameters please refer to Dict API (/dicts/image_types/).
+         * See side_id parameter below. To review such parameters please refer to Dict API (/dicts/image_types/).
+         * @var Response $response
          */
         $response = $this->restClient->post(
             sprintf(self::API_PATH_IMAGE_CREATE, $companyId, $datasetId, $subjectId, $batchId),
@@ -80,7 +82,7 @@ class Image {
             ]
         );
 
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
     /**
@@ -98,9 +100,10 @@ class Image {
             $this->restClient->setAccessTokenHeader($accessToken);
         }
 
+        /** @var Response $response */
         $response = $this->restClient->get(sprintf(self::API_PATH_IMAGE_GET, $companyId, $datasetId, $subjectId, $batchId));
 
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
     //API_PATH_IMAGE_RESULT_GET
@@ -115,12 +118,13 @@ class Image {
      * @param string|null $accessToken
      * @return array|mixed
      */
-    public function getResult(string $companyId, string $datasetId, string $subjectId, string $batchId, string $imageId, string $accessToken = null)
+    public function getImageResult(string $companyId, string $datasetId, string $subjectId, string $batchId, string $imageId, string $accessToken = null)
     {
         if (null != $accessToken) {
             $this->restClient->setAccessTokenHeader($accessToken);
         }
 
+        /** @var Response $response */
         $response = $this->restClient->get(sprintf(
             self::API_PATH_IMAGE_RESULT_GET,
             $companyId,
@@ -130,7 +134,7 @@ class Image {
             $imageId
         ));
 
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
 }

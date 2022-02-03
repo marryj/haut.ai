@@ -1,7 +1,8 @@
 <?php
 namespace App\Service\Hautai\Objects;
 
-use \App\Service\Hautai\RestClientInterface;
+use App\Service\Hautai\Http\Response;
+use \App\Service\Hautai\Http\RestClientInterface;
 
 
 class Subject {
@@ -50,13 +51,14 @@ class Subject {
             $this->restClient->setAccessTokenHeader($accessToken);
         }
 
+        /** @var Response $response */
         $response = $this->restClient->post(
             sprintf(self::API_PATH_SUBJECT_CREATE, $companyId, $datasetId),
             [],
             ['name' => $subjectName]
         );
 
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
     /**
@@ -73,9 +75,10 @@ class Subject {
             $this->restClient->setAccessTokenHeader($accessToken);
         }
 
+        /** @var Response $response */
         $response = $this->restClient->get(sprintf(self::API_PATH_SUBJECT_GET, $companyId, $datasetId));
 
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
     /**
@@ -88,12 +91,13 @@ class Subject {
      */
     public function delete(string $subjectId, string $companyId, string $datasetId)
     {
+        /** @var Response $response */
         $response = $this->restClient->delete(
             sprintf(self::API_PATH_SUBJECT_DELETE, $companyId, $datasetId),
             [],
             ['subjects_ids' => [$subjectId]]
         );
-        return $this->restClient->getResult($response);
+        return $response->getResult();
     }
 
 }

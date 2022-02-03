@@ -3,6 +3,7 @@ namespace App\Service\Hautai;
 
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
+use App\Service\Hautai\Http\RestClientInterface;
 
 class AuthenticationService {
 
@@ -35,7 +36,7 @@ class AuthenticationService {
      */
     public function authenticate(): string
     {
-//        $this->cache->delete('hautai.apiclient.access_token');
+        $this->cache->delete('hautai.apiclient.access_token');
 
         $this->accessToken = $this->cache->get('hautai.apiclient.access_token', function (ItemInterface $item) {
             $item->expiresAfter(3600);

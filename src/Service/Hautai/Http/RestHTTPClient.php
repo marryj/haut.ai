@@ -1,12 +1,9 @@
 <?php
-namespace App\Service\Hautai;
+namespace App\Service\Hautai\Http;
 
 use App\Service\Hautai\Exceptions\ConfigurationException as HautAiConfigurationException;
-use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpClient\Response\CurlResponse;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class RestHTTPClient implements RestClientInterface {
@@ -37,7 +34,7 @@ class RestHTTPClient implements RestClientInterface {
     private $client;
 
     /**
-     * @var CurlResponse
+     * @var ResponseInterface
      */
     private $response;
 
@@ -126,17 +123,7 @@ class RestHTTPClient implements RestClientInterface {
         }
 
 
-        return $this->response;
-    }
-
-    /**
-     * @param CurlResponse $response
-     * @return int
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     */
-    public function getStatusCode(CurlResponse $response)
-    {
-        return $response->getStatusCode();
+        return new \App\Service\Hautai\Http\Response($this->response);
     }
 
     /**
@@ -199,37 +186,6 @@ class RestHTTPClient implements RestClientInterface {
         return $this->request('PATCH', $uri, $query, $data, $headers);
     }
 
-    /**
-     * @return array
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     */
-    public function getResponseArray(ResponseInterface $response): array
-    {
-        if ($response->isRequestSuccessful()) {
-            return $response->toArray();
-        }
-
-        return [];
-    }
-
-    /**
-     * @param CurlResponse $response
-     * @return bool
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     */
-    public function isRequestSuccessful(ResponseInterface $response): bool
-    {
-        if (Response::HTTP_OK == $response->getStatusCode()) {
-            return true;
-        }
-
-        return false;
-    }
-
 
     /**
      * @param string $accessToken
@@ -257,37 +213,6 @@ class RestHTTPClient implements RestClientInterface {
     }
 
     /**
-     * Get a request result.
-     * Returns an array with a response body or and error code => reason.
-     * @param Response $response
-     * @throws ClientException
-     * @return array|mixed
-     */
-    public function getResult(ResponseInterface $response): array
-    {
-        // Workaround for export methods getRouteAsGPX, getRouteAsTCX:
-        if (is_string($response)) {
-            return $response;
-        }
-
-        $status = $response->getStatusCode();
-
-        $expandedResponse = [];
-
-        try {
-            $expandedResponse['headers'] = $response->getHeaders();
-            $expandedResponse['body'] = $response->toArray();
-        } catch (\Exception $e) {
-            $expandedResponse['exception'] = $e->getMessage();
-        }
-
-        $expandedResponse['success'] = $status === 200 || $status === 201;
-        $expandedResponse['status'] = $status;
-
-        return $expandedResponse;
-    }
-
-    /**
      * @return array|bool
      * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
@@ -297,13 +222,14 @@ class RestHTTPClient implements RestClientInterface {
      */
     public function login(): array
     {
+        /** @var \App\Service\Hautai\Http\Response $response */
         $response = $this->post(
             self::API_PATH_LOGIN,
             [],
             ['username' => $this->username, 'password' => $this->password]
         );
 
-        return $this->getResult($response);
+        return $response->getResult();
     }
 
     /**
@@ -321,6 +247,7 @@ class RestHTTPClient implements RestClientInterface {
      */
     public function refreshToken(string $refreshToken): array
     {
+        /** @var \App\Service\Hautai\Http\Response $response */
         $response = $this->post(
             self::API_PATH_REFRESH_TOKEN,
             [],
