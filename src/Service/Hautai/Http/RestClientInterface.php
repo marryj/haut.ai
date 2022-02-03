@@ -4,12 +4,6 @@ namespace App\Service\Hautai\Http;
 interface RestClientInterface {
 
     /**
-     * @param string $username Username to authenticate with
-     * @param string $password Password to authenticate with
-     */
-    public function init($username = null, $password = null);
-
-    /**
      *
      * @param string $method HTTP Method
      * @param string $uri Fully qualified url
@@ -59,16 +53,4 @@ interface RestClientInterface {
      * @param array $headers
      */
     public function patch($uri, $query = array(), $data = array(), $headers = array());
-
-    /**
-     * @return array
-     */
-    public function login() :array;
-
-    /**
-     * @param string $refreshToken
-     * @return array
-     */
-    public function refreshToken(string $refreshToken): array;
-
 }

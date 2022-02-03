@@ -1,32 +1,15 @@
 <?php
 namespace App\Service\Hautai\Http;
 
-use App\Service\Hautai\Exceptions\ConfigurationException as HautAiConfigurationException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class RestHTTPClient implements RestClientInterface {
 
-    const ENV_ACCOUNT_USER = "HAUT_AI_ACCOUNT_USER";
-
-    const ENV_ACCOUNT_PASS = "HAUT_AI_ACCOUNT_PASS";
-
     const API_HOST = "https://saas.haut.ai/api/v1/";
 
-    const API_PATH_LOGIN = 'login/';
-
     const API_PATH_REFRESH_TOKEN = 'refresh/';
-
-    /**
-     * @var string
-     */
-    protected $username;
-
-    /**
-     * @var string
-     */
-    protected $password;
 
     /**
      * @var HttpClientInterface
@@ -60,32 +43,6 @@ class RestHTTPClient implements RestClientInterface {
         }
     }
 
-    /**
-     * @param string $username Username to authenticate with
-     * @param string $password Password to authenticate with
-     * @throws HautAiConfigurationException
-     */
-    public function init($username = null, $password = null) {
-        if($username) {
-            $this->username = $username;
-        } else {
-            if (array_key_exists(self::ENV_ACCOUNT_USER, $_ENV)) {
-                $this->username = $_ENV[self::ENV_ACCOUNT_USER];
-            }
-        }
-
-        if($password) {
-            $this->password = $password;
-        } else {
-            if (array_key_exists(self::ENV_ACCOUNT_PASS, $_ENV)) {
-                $this->password = $_ENV[self::ENV_ACCOUNT_PASS];
-            }
-        }
-
-        if(!$this->username || !$this->password) {
-            throw new HautAiConfigurationException("Credentials are required to create a Client");
-        }
-    }
 
     /**
      * Makes a request to the Haut.Ai API using the configured http client
@@ -210,50 +167,5 @@ class RestHTTPClient implements RestClientInterface {
     protected function getHeaders()
     {
         return $this->headers;
-    }
-
-    /**
-     * @return array|bool
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     */
-    public function login(): array
-    {
-        /** @var \App\Service\Hautai\Http\Response $response */
-        $response = $this->post(
-            self::API_PATH_LOGIN,
-            [],
-            ['username' => $this->username, 'password' => $this->password]
-        );
-
-        return $response->getResult();
-    }
-
-    /**
-     * Exchange refresh token for access token. You receive the same access token with extended lifetime of 3600 sec.
-     * A refresh token allows an application to obtain a new access token without prompting the user.
-     * In our case no need to refresh the token as we don`t get credentials from a client.
-     *
-     * @param $refreshToken
-     * @return array|bool
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     */
-    public function refreshToken(string $refreshToken): array
-    {
-        /** @var \App\Service\Hautai\Http\Response $response */
-        $response = $this->post(
-            self::API_PATH_REFRESH_TOKEN,
-            [],
-            ['refresh_token' => $refreshToken]
-        );
-
-        return $this->getResult($response);
     }
 }
